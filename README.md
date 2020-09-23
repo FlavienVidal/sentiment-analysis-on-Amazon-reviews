@@ -30,3 +30,29 @@ The objective of this project is to analyze the correlation between the Amazon p
 ## Difficulties
 It is possible to give a computer the ability to understand the overall emotion emanating from a body of text, but it needs to understand which are the most influential words in the text, which word should be priotarized, it should be able to understand the meaning of successions of words that can mean a whole different thing than taken apart. Also, it is very difficult for a computer to recognize sarcasm. Since the data is written by different customers, there may be various typos, nonstandard spellings, and other variations that may not be found in curated sets of published text. Comments must all be written in the same language (English in our case). The last difficulty concerns the dataset: it must contain as many negative, neutral and positive examples in order to train our model correctly.
 
+
+## Dataset
+The dataset I will be using comes from Kaggle.com and is a sample of a larger dataset available through Datafiniti. It lists 34,660 consumer reviews of Amazon manufactured products including their ratings, reviews, names and more.
+
+![Number_of_products_per_id](Number_of_products_per_id.png)
+
+This figure shows that some products have many reviews while others have very little reviews. This can be a problem because the more different reviews (and therefore words) we have, the better we can train the model. Here, most of the reviews refer to the same product, which can limit the range of emotions and words. We need to get an overall picture of the distribution of the ratings to see if there are other problems with our dataset.
+
+Ratings:
+We notice that over the 36640 data points, only 34627 have a rating value. Thus 36640-34627=2013 data points won’t be useful in our analysis. We can drop them from the dataset.
+
+Overall idea:
+In order to have a brief overview of the dataset, we plot the distribution of the ratings. We have 5 classes (ratings from 1 to 5). We notice that the data we have is not well distributed, the classes are not represented equally: the majority of the products that were rated, were rated highly. There is more than twice as many 5-star ratings as all other ratings combined. About 70% of the dataset belongs only to 1 class (5-star ratings). This is an imbalanced dataset.
+
+![avg_rating](avg_rating.png)
+
+Most classification datasets do not have exactly equal number of instances in each class, but a small difference often does not matter. However, in our case we have a significant class imbalance and it can cause problems. This imbalance is expected since the dataset characterize the overall appreciation of Amazon manufactured products. The vast majority of the products will be highly rated otherwise they will be dropped of the stock. 
+
+Among the data set is also the number of helpful votes for a given review. The distribution of useful reviews is as follow:
+
+![num_useful_rev](num_useful_rev.png)
+
+It is noticeable that very few comments were designated as "helpful" by other consumers and this is why outliers are valuable. We may want to weight reviews that had many people who find them helpful.
+
+
+## Key results
