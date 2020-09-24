@@ -1,11 +1,13 @@
 # sentiment-analysis-on-Amazon-reviews
 
 
+
 ## What is opinion mining?
 
 In computer science, opinion mining also referred to as sentiment analysis is an approach of natural language processing referring to an analysis that identifies the tone emerging from a body of text on large amounts of data. It aims to determine an evaluation, a judgement or more overall an emotional state with regard to a given topic.
 
 Opinion mining is a growing and promising research field widely applied to reviews and social media to categorize opinions.
+
 
 
 ## Why is it so useful nowadays?
@@ -20,6 +22,7 @@ Hence the reason why opinion mining approaches are seen as the cornerstones of l
 > With the evolution of traditional stores to online shopping over the time, product reviews are becoming more and more important. Consumers around the world are sharing reviews directly on product pages in real time creating one huge database which is constantly being updated. For example, the amount of reviews on Amazon has increased tremendously over the past years. This vast amount of consumer reviews creates an opportunity for businesses to see how the market reacts to a specific product and how a given company can adapt its stocks. If businesses are able to categorize products according to certain patterns based on their reviews it could help them choose which type of products should be dropped from their stock, which one should they keep, and which others could they get. For example, if a group of different suitcases is highly rated and that people seem to like the materials, the dimensions and the colors, it probably means that products with similar proprieties should be kept.
 
 
+
 ## Project
 
 The objective of this project is to analyze the correlation between the Amazon product reviews and the rating of the products given by consumers. I would like to create a supervised learning model able to classify a given customer review as positive, neutral and negative, and thus affect an overall score to a given review: is the consumer happy of his purchase? Is he disappointed? Is he just neutral? 
@@ -27,14 +30,16 @@ The objective of this project is to analyze the correlation between the Amazon p
 ![pos_neg_neut](pos_neg_neut.png)
 
 
+
 ## Difficulties
 It is possible to give a computer the ability to understand the overall emotion emanating from a body of text, but it needs to understand which are the most influential words in the text, which word should be priotarized, it should be able to understand the meaning of successions of words that can mean a whole different thing than taken apart. Also, it is very difficult for a computer to recognize sarcasm. Since the data is written by different customers, there may be various typos, nonstandard spellings, and other variations that may not be found in curated sets of published text. Comments must all be written in the same language (English in our case). The last difficulty concerns the dataset: it must contain as many negative, neutral and positive examples in order to train our model correctly.
+
 
 
 ## Dataset
 The dataset I will be using comes from Kaggle.com and is a sample of a larger dataset available through Datafiniti. It lists 34,660 consumer reviews of Amazon manufactured products including their ratings, reviews, names and more.
 
-Let’s first have a quick view of this dataset:
+Let’s first have a quick look at the top five rows of this dataset and get a description and distribution of the data:
 ```
                      id                                                                                     name       asins   brand                                                                       categories                                                                                                                                                                                                                 keys manufacturer              reviews.date     reviews.dateAdded                                   reviews.dateSeen reviews.didPurchase reviews.doRecommend  reviews.id  reviews.numHelpful  reviews.rating                                                                                                                                         reviews.sourceURLs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           reviews.text                            reviews.title  reviews.userCity  reviews.userProvince reviews.username
 0  AVqkIhwDv8e3D1O-lebb  All-New Fire HD 8 Tablet, 8 HD Display, Wi-Fi, 16 GB - Includes Special Offers, Magenta  B01AHB9CN2  Amazon  Electronics,iPad & Tablets,All Tablets,Fire Tablets,Tablets,Computers & Tablets  841667104676,amazon/53004484,amazon/b01ahb9cn2,0841667104676,allnewfirehd8tablet8hddisplaywifi16gbincludesspecialoffersmagenta/5620406,allnewfirehd8tablet8hddisplaywifi16gbincludesspecialoffersmagenta/b01ahb9cn2       Amazon  2017-01-13T00:00:00.000Z  2017-07-03T23:33:15Z  2017-06-07T09:04:00.000Z,2017-04-30T00:45:00.000Z                 NaN                True         NaN                 0.0             5.0  http://reviews.bestbuy.com/3545/5620406/reviews.htm?format=embedded&page=200,http://reviews.bestbuy.com/3545/5620406/reviews.htm?format=embedded&page=166                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        This product so far has not disappointed. My children love to use it and I like the ability to monitor control what content they see with ease.                                   Kindle               NaN                   NaN          Adapter
@@ -87,19 +92,21 @@ min    111372787.0            0.000000  ...               NaN                   
 max    111372787.0          814.000000  ...               NaN                   NaN
 ```
 
-![Number_of_products_per_id](Number_of_products_per_id.png)
+![numb_prod_per_id](numb_prod_per_id.png)
 
-This figure shows that some products have many reviews while others have very little reviews. This can be a problem because the more different reviews (and therefore words) we have, the better we can train the model. Here, most of the reviews refer to the same product, which can limit the range of emotions and words. We need to get an overall picture of the distribution of the ratings to see if there are other problems with our dataset.
+This figure shows that some products have many reviews while others have very little reviews. This can be a problem because the more different reviews (and therefore the more words) we have, the better we can train the model. Here, most of the reviews refer to the same product, which can limit the range of emotions and words. This will be the first difficulty in our dataset. We need to get an overall picture of the distribution of the ratings to see if there are other problems with our dataset.
 
 Ratings:
-We notice that over the 36640 data points, only 34627 have a rating value. Thus 36640-34627=2013 data points won’t be useful in our analysis. We can drop them from the dataset.
+- We notice that over the 36640 data points, only 34627 have a rating value. Thus 2013 data points won’t be useful in our analysis. We can drop them from the dataset.
 
 Overall idea:
-In order to have a brief overview of the dataset, we plot the distribution of the ratings. We have 5 classes (ratings from 1 to 5). We notice that the data we have is not well distributed, the classes are not represented equally: the majority of the products that were rated, were rated highly. There is more than twice as many 5-star ratings as all other ratings combined. About 70% of the dataset belongs only to 1 class (5-star ratings). This is an imbalanced dataset.
+- In order to have a brief overview of the dataset, we plot the distribution of the ratings. We have 5 classes (ratings from 1 to 5). We notice that the data we have is not well distributed, the classes are not represented equally: the majority of the products that were rated, were rated highly. There is more than twice as many 5-star ratings as all other ratings combined and about 70% of the dataset belongs only to 1 class (5-star ratings). This is an imbalanced dataset.
 
 ![avg_rating](avg_rating.png)
 
-Most classification datasets do not have exactly equal number of instances in each class, but a small difference often does not matter. However, in our case we have a significant class imbalance and it can cause problems. This imbalance is expected since the dataset characterize the overall appreciation of Amazon manufactured products. The vast majority of the products will be highly rated otherwise they will be dropped of the stock. There is more than twice amount of 5 stars ratings than all the other ratings combined.
+Most classification datasets do not have exactly equal number of instances in each class, but a small difference often does not matter. However, in our case we have a significant class imbalance and it can cause problems. This imbalance is expected since the dataset characterize the overall appreciation of Amazon manufactured products. The vast majority of the products will be highly rated otherwise they will be dropped of the stock.
+
+Here are a few examples of ratings: 
 ```
 Average rating per product:  id
 AV1YE_muvKc47QAVgpwE    4.707278
@@ -110,20 +117,11 @@ AVpe8PEVilAPnD_xRYIi         NaN
 AVpe9CMS1cnluZ0-aoC5    4.000000
 AVpfBEWcilAPnD_xTGb7         NaN
 AVpfIfGA1cnluZ0-emyp    4.205479
-AVpf_4sUilAPnD_xlwYV    3.066667
-AVpf_znpilAPnD_xlvAF    3.500000
-AVpff7_VilAPnD_xc1E_    5.000000
-AVpfiBlyLJeJML43-4Tp    2.461538
-AVpfl8cLLJeJML43AE3S    4.671098
-AVpfpK8KLJeJML43BCuD    4.531447
-AVpftoij1cnluZ0-p5n2    4.862745
-AVpfwS_CLJeJML43DH5w         NaN
-AVpg3q4RLJeJML43TxA_    3.666667
-AVpgdkC8ilAPnD_xsvyi    4.700000
+(...)
 ```
 Among the data set is also the number of helpful votes for a given review. The distribution of useful reviews is as follow:
 
-![num_useful_rev](num_useful_rev.png)
+![numb_useful_reviews](numb_useful_reviews.png)
 
 At first it seems that attribute `reviews.numHelp` has no value since no user has considered any of the comments as useful but looking more closely:
 
@@ -133,10 +131,7 @@ It is noticeable that very few comments were designated as "helpful" by other co
 
 
 
-
-
-
-## Key results
+## Stratified sampling
 
 We need to split our dataset into a training set and a test set. Since the absolute majority of reviews are positive reviews, we will need to do a stratified distribution of the scores to **ensure that we do not train the classifier on imbalanced data**. We will first remove all samples whose review score is NAN, then convert all reviews scores to integer datatype and finally stratify our sampling.
 ```
@@ -155,6 +150,7 @@ We can measure and compare the proportions of reviews ratings in the overall dat
 ```
 
 
+
 ## Sentiment analysis
 
 We need to segregate ratings from 1 to 5 into positive, neutral, and negative sentiments and then create a sentiment category attribute.
@@ -168,18 +164,24 @@ CountVectorizer() enables to convert a collection of text documents to a matrix 
 
 ### Building models
 
-We need to build a model able to recognize the overall feeling of the consumer based on:
+We will train and evaluate several models able to recognize the overall feeling of the consumer and then fine tune the most promising ones.
 •	Logistic Regression
 •	Naïve Bayes Analysis
 •	Support Vector Machines
 •	Decision Trees
 •	Random Forests
 
+![models_rank](models_rank.png)
 
-
-
-
-
-
-
+```
+Some prediction examples: 
+                                  Reviews       Multi NB        Log Reg     Linear SVC  Decision Tree  Random Forest   GSCV Lin SVC
+0  I love this product. I am very happy!  Very Positive  Very Positive  Very Positive  Very Positive  Very Positive  Very Positive
+1                    I like the product.  Very Positive  Very Positive  Very Positive  Very Positive  Very Positive  Very Positive
+2           I like it but it’s too large  Very Positive        Neutral        Neutral  Very Positive  Very Positive  Very Positive
+3                 I don’t really like it  Very Positive        Neutral        Neutral  Very Positive  Very Positive        Neutral
+4                         A bit confused  Very Positive        Neutral        Neutral                                      Neutral
+5                                    Bad        Neutral        Neutral        Neutral                                      Neutral
+6                                  worst        Neutral        Neutral  Very Negative                                Very Negative
+```
 
