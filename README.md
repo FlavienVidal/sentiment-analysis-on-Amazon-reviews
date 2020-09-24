@@ -97,16 +97,14 @@ max    111372787.0          814.000000  ...               NaN                   
 This figure shows that some products have many reviews while others have very little reviews. This can be a problem because the more different reviews (and therefore the more words) we have, the better we can train the model. Here, most of the reviews refer to the same product, which can limit the range of emotions and words. This will be the first difficulty in our dataset. We need to get an overall picture of the distribution of the ratings to see if there are other problems with our dataset.
 
 Ratings:
-- We notice that over the 36640 data points, only 34627 have a rating value. Thus 2013 data points won’t be useful in our analysis. We can drop them from the dataset.
+> We notice that over the 36640 data points, only 34627 have a rating value. Thus 2013 data points won’t be useful in our analysis. We can drop them from the dataset.
 
 Overall idea:
-- In order to have a brief overview of the dataset, we plot the distribution of the ratings. We have 5 classes (ratings from 1 to 5). We notice that the data we have is not well distributed, the classes are not represented equally: the majority of the products that were rated, were rated highly. There is more than twice as many 5-star ratings as all other ratings combined and about 70% of the dataset belongs only to 1 class (5-star ratings). This is an imbalanced dataset.
+> In order to have a brief overview of the dataset, we plot the distribution of the ratings. We have 5 classes (ratings from 1 to 5). We notice that the data we have is not well distributed, the classes are not represented equally: the majority of the products that were rated, were rated highly. There is more than twice as many 5-star ratings as all other ratings combined and about 70% of the dataset belongs only to 1 class (5-star ratings). This is an imbalanced dataset.
 
 ![avg_rating](avg_rating.png)
 
-Most classification datasets do not have exactly equal number of instances in each class, but a small difference often does not matter. However, in our case we have a significant class imbalance and it can cause problems. This imbalance is expected since the dataset characterize the overall appreciation of Amazon manufactured products. The vast majority of the products will be highly rated otherwise they will be dropped of the stock.
-
-Here are a few examples of ratings: 
+Most classification datasets do not have exactly equal number of instances in each class, but a small difference often does not matter. However, in our case we have a significant class imbalance and it can cause problems. This imbalance is expected since the dataset characterize the overall appreciation of Amazon manufactured products. The vast majority of the products will be highly rated otherwise they will be dropped of the stock. Here are a few examples of ratings: 
 ```
 Average rating per product:  id
 AV1YE_muvKc47QAVgpwE    4.707278
@@ -120,7 +118,6 @@ AVpfIfGA1cnluZ0-emyp    4.205479
 (...)
 ```
 Among the data set is also the number of helpful votes for a given review. The distribution of useful reviews is as follow:
-
 ![numb_useful_reviews](numb_useful_reviews.png)
 
 At first it seems that attribute `reviews.numHelp` has no value since no user has considered any of the comments as useful but looking more closely:
