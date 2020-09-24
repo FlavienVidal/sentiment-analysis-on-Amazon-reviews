@@ -76,7 +76,6 @@ memory usage: 5.6+ MB
 ```
 
 ```
-DATA DESCRIPTION:
         reviews.id  reviews.numHelpful  ...  reviews.userCity  reviews.userProvince
 count          1.0        34131.000000  ...               0.0                   0.0
 mean   111372787.0            0.630248  ...               NaN                   NaN
@@ -126,9 +125,61 @@ Among the data set is also the number of helpful votes for a given review. The d
 
 ![num_useful_rev](num_useful_rev.png)
 
+At first it seems that attribute `reviews.numHelp` has no value since no user has considered any of the comments as useful but looking more closely:
+
 `Are all values in column reviews.numHelp equal to 0:  reviews.numHelpful    False`
 
 It is noticeable that very few comments were designated as "helpful" by other consumers and this is why outliers are valuable. We may want to weight reviews that had many people who find them helpful.
 
 
+
+
+
+
 ## Key results
+
+We need to split our dataset into a training set and a test set. Since the absolute majority of reviews are positive reviews, we will need to do a stratified distribution of the scores to **ensure that we do not train the classifier on imbalanced data**. We will first remove all samples whose review score is NAN, then convert all reviews scores to integer datatype and finally stratify our sampling.
+```
+Original dataset 34660
+New dataset 34627
+len(stratified_training) = 27701  | len(stratified_test) = 6926
+```
+We can measure and compare the proportions of reviews ratings in the overall dataset with the proportions in the train and test sets generated with stratified sampling to ensure the population is divided into homogeneous subgroups (strata):
+```
+           Df  Strat Train Set  Strat Test Set
+1.0  0.011840         0.011949        0.009962
+2.0  0.011609         0.011516        0.011839
+3.0  0.043290         0.042923        0.044470
+4.0  0.246657         0.248005        0.240832
+5.0  0.686603         0.684668        0.691886
+```
+
+
+## Sentiment analysis
+
+We need to segregate ratings from 1 to 5 into positive, neutral, and negative sentiments and then create a sentiment category attribute.
+
+
+### Feature engineering
+
+To select the useful features for the model, I will be using the bag of words strategy. It is a way of extracting features from text by describing the occurrence of words within the text. For that, I will be using the scikitlearn library: CountVectorizer() and TfidfTransformer().
+CountVectorizer() enables to convert a collection of text documents to a matrix of token counts whereas TfidfTransformer() transforms a count matrix to a normalized tf or tf-idf representation.
+
+
+### Building models
+
+We need to build a model able to recognize the overall feeling of the consumer based on:
+•	Logistic Regression
+•	Naïve Bayes Analysis
+•	Support Vector Machines
+•	Decision Trees
+•	Random Forests
+
+
+
+
+
+
+
+
+
