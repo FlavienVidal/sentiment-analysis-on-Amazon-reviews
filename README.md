@@ -1,4 +1,4 @@
-# sentiment-analysis-on-Amazon-reviews
+# Sentiment Analysis on Amazon Reviews
 
 
 
@@ -32,7 +32,13 @@ The objective of this project is to analyze the correlation between the Amazon p
 
 
 ## Difficulties
-It is possible to give a computer the ability to understand the overall emotion emanating from a body of text, but it needs to understand which are the most influential words in the text, which word should be priotarized, it should be able to understand the meaning of successions of words that can mean a whole different thing than taken apart. Also, it is very difficult for a computer to recognize sarcasm. Since the data is written by different customers, there may be various typos, nonstandard spellings, and other variations that may not be found in curated sets of published text. Comments must all be written in the same language (English in our case). The last difficulty concerns the dataset: it must contain as many negative, neutral and positive examples in order to train our model correctly.
+It is possible to give a computer the ability to understand the overall emotion emanating from a body of text, but it needs to understand which are the most influential words in the text, which word should be priotarized, and it should be able to understand the meaning of successions of words that can mean a whole different thing than taken apart. Indeed, meaning is built from ordered sequences of words that refer to each other but the vast majority of text analyses techniques ignore this complexity and rely only on counts on language tokens (words, sentences, ...).
+Also, it is very difficult for a computer to recognize sarcasm. 
+Since the data is written by different customers, there may be various typos, nonstandard spellings, and other variations that may not be found in curated sets of published text. 
+Comments must all be written in the same language (English in our case). 
+The last difficulty concerns the dataset: it must contain as many negative, neutral and positive examples in order to train our model correctly.
+
+Lastly, the process of *tokenization* results in very high dimensional matrices: the more text data you accumulate, the larger the dimensionality of the dataset. We are never in a safe place of having as many more observations than variables! 
 
 
 
@@ -159,6 +165,13 @@ To select the useful features for the model, I will be using the bag of words st
 CountVectorizer() enables to convert a collection of text documents to a matrix of token counts whereas TfidfTransformer() transforms a count matrix to a normalized tf or tf-idf representation.
 
 
+## Tokenization
+The *bag-of-words* representation technique summarizes a document in terms of word counts and throws away all irelevant information or information relevant to any more complex processes of document construction. The reason for eliminating all these data is computational and statistical efficiency, we need to store and work on data that are important. The huge advantage of this technique is its simplicity.
+Usually ... :
+removes the too common or rare words, isolated punctuation and numbers as well as common suffixes like -s or -ing.
+The remaining tokens are then counted
+
+
 ### Building models
 
 We will train and evaluate several models able to recognize the overall feeling of the consumer and then fine tune the most promising ones.
@@ -181,4 +194,10 @@ Some prediction examples:
 5                                    Bad        Neutral        Neutral        Neutral                                      Neutral
 6                                  worst        Neutral        Neutral  Very Negative                                Very Negative
 ```
+
+
+
+
+
+
 
